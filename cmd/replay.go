@@ -24,7 +24,11 @@ func newReplayCmd() *cobra.Command {
 				return fmt.Errorf("invalid event ID: %w", err)
 			}
 
-			s, err := store.Open(dbPath())
+			path, err := dbPath()
+			if err != nil {
+				return err
+			}
+			s, err := store.Open(path)
 			if err != nil {
 				return err
 			}

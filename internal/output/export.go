@@ -28,7 +28,7 @@ func ExportAsCurl(e *store.Event) string {
 
 	for _, k := range keys {
 		for _, v := range e.Headers[k] {
-			parts = append(parts, fmt.Sprintf("  -H '%s: %s'", k, escapeQuotes(v)))
+			parts = append(parts, fmt.Sprintf("  -H '%s: %s'", escapeQuotes(k), escapeQuotes(v)))
 		}
 	}
 

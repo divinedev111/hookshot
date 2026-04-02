@@ -17,7 +17,11 @@ func newHistoryCmd() *cobra.Command {
 		Use:   "history",
 		Short: "List captured webhook events",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			s, err := store.Open(dbPath())
+			path, err := dbPath()
+			if err != nil {
+				return err
+			}
+			s, err := store.Open(path)
 			if err != nil {
 				return err
 			}

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -27,12 +28,17 @@ func NewRoot() *cobra.Command {
 	return root
 }
 
-func dbPath() string {
+func dbPath() (string, error) {
 	if p := os.Getenv("HOOKSHOT_DB"); p != "" {
-		return p
+		return p, nil
 	}
-	home, _ := os.UserHomeDir()
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", fmt.Errorf("resolving home directory: %w", err)
+	}
 	dir := filepath.Join(home, ".hookshot")
-	os.MkdirAll(dir, 0o755)
-	return filepath.Join(dir, "hookshot.db")
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return "", fmt.Errorf("creating %s: %w", dir, err)
+	}
+	return filepath.Join(dir, "hookshot.db"), nil
 }

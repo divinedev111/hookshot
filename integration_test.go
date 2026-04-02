@@ -2,8 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
-	"io"
+"io"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
@@ -201,5 +200,5 @@ func TestFullFlow(t *testing.T) {
 		t.Errorf("received_at too old: %v", e.ReceivedAt)
 	}
 
-	fmt.Println("Integration test passed: listen -> capture -> history -> inspect -> replay -> export")
+	t.Log("Integration test passed: listen -> capture -> history -> inspect -> replay -> export")
 }

@@ -9,11 +9,16 @@ import (
 	"github.com/divinedev111/hookshot/internal/store"
 )
 
+const maxBodySize = 10 << 20 // 10 MB
+
 // NewHandler returns an HTTP handler that captures incoming webhook requests.
 func NewHandler(s *store.Store, forward string, onEvent func(*store.Event)) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		body, _ := io.ReadAll(r.Body)
-		defer r.Body.Close()
+		body, err := io.ReadAll(io.LimitReader(r.Body, maxBodySize))
+		if err != nil {
+			http.Error(w, "failed to read body", http.StatusBadRequest)
+			return
+		}
 
 		info := provider.Detect(r.Header, body)
 
@@ -36,9 +41,9 @@ func NewHandler(s *store.Store, forward string, onEvent func(*store.Event)) http
 		}
 
 		if forward != "" {
-			status, resp, err := Forward(forward, e.Method, e.Headers, e.Body)
-			if err == nil {
-				s.UpdateForward(e.ID, status, resp)
+			status, resp, fwdErr := Forward(forward, e.Method, e.Headers, e.Body)
+			if fwdErr == nil {
+				_ = s.UpdateForward(e.ID, status, resp)
 				e.ForwardStatus = &status
 				e.ForwardResponse = resp
 			}
