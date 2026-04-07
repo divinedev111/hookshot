@@ -1,3 +1,7 @@
+[![CI](https://github.com/divinedev111/hookshot/actions/workflows/ci.yml/badge.svg)](https://github.com/divinedev111/hookshot/actions)
+[![Go Report Card](https://goreportcard.com/badge/github.com/divinedev111/hookshot)](https://goreportcard.com/report/github.com/divinedev111/hookshot)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 # hookshot
 
 Webhook testing from your terminal. Capture, inspect, replay, and export webhook requests with provider-aware detection and SQLite-backed persistence.
